@@ -7,6 +7,10 @@ defmodule ChessLogic.MixProject do
       version: "0.1.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
+      erlc_paths: ["deps/chessfold/erl"], # ADD THIS OPTION
+      dialyzer: [
+        ignore_warnings: "dialyzer.ignore-warnings",
+      ],
       deps: deps()
     ]
   end
@@ -23,6 +27,13 @@ defmodule ChessLogic.MixProject do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
+      
+      {:chessfold, github: "fcardinaux/chessfold", app: false},
+      
+      # Development
+      {:dialyxir, "~> 0.5.1", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.18.3", only: :dev, runtime: false},
+      {:credo, "~> 0.8.10", only: [:dev], runtime: false},
     ]
   end
 end
