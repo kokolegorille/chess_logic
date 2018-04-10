@@ -18,6 +18,12 @@ defmodule GameTest do
     assert {:error, _} = Game.play(g, "c7c5")
   end
   
+  test "cannot play a game over" do
+    g = Game.new()
+    assert {:ok, g} = Game.resign(g)
+    assert {:error, _reason} = Game.play(g, "e2e4")
+  end
+  
   test "can checkmate meli" do
     g = Game.new()
     assert {:ok, g} = Game.play(g, "f2f3")
@@ -37,6 +43,12 @@ defmodule GameTest do
     assert g.result == "1/2"
   end
   
+  test "cannot draw a game over" do
+    g = Game.new()
+    assert {:ok, g} = Game.resign(g)
+    assert {:error, _reason} = Game.draw(g)
+  end
+  
   test "can resign a game" do
     g = Game.new()
     assert {:ok, g} = Game.resign(g)
@@ -45,9 +57,14 @@ defmodule GameTest do
     assert g.result == "0-1"
   end
   
+  test "cannot resign a game over" do
+    g = Game.new()
+    assert {:ok, g} = Game.resign(g)
+    assert {:error, _reason} = Game.resign(g)
+  end
+  
   test "can draw a game after 3x" do
     g = Game.new()
-    
     assert {:ok, g} = Game.play(g, "g1f3")
     assert {:ok, g} = Game.play(g, "b8c6")
     assert {:ok, g} = Game.play(g, "f3g1")
@@ -67,5 +84,10 @@ defmodule GameTest do
     g = Game.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 99 100")
     assert {:ok, g} = Game.play(g, "g1f3")
     assert {:error, _reason} = Game.play(g, "b8c6")
+    
+    # Set half move to 99
+    g = Game.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 99 100")
+    assert {:ok, g} = Game.play(g, "e2e4")
+    assert {:ok, _g} = Game.play(g, "b8c6")
   end
 end

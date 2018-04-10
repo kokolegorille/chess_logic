@@ -29,7 +29,6 @@ defmodule ChessLogic.Game do
           w = opponent_color(turn)
           {:over, w, winner_result(w)}
         _ ->
-          # TODO: Detect 3 times repetition here!
           if is_three_times_repetition(game, new_current_pos) do
             {:over, nil, "1/2"}
           else
@@ -54,7 +53,7 @@ defmodule ChessLogic.Game do
   end
   def play(_game, move), do: {:error, "Could not play move #{move}"}
 
-  def draw(%Game{} = game) do
+  def draw(%Game{status: status} = game) when status != :over do
     {
       :ok,
       %{game| 
@@ -63,8 +62,9 @@ defmodule ChessLogic.Game do
       }
     }
   end
+  def draw(_game), do: {:error, "Could not draw game"}
   
-  def resign(%Game{current_position: current_pos} = game) do
+  def resign(%Game{current_position: current_pos, status: status} = game) when status != :over do
     {_, turn} = Position.get_status(current_pos)
     w = opponent_color(turn)
     {
@@ -76,6 +76,7 @@ defmodule ChessLogic.Game do
       }
     }
   end
+  def resign(_game), do: {:error, "Could not resign game"}
 
   # PRIVATE
 
