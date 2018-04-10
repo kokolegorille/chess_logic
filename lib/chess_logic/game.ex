@@ -4,6 +4,10 @@ defmodule ChessLogic.Game do
   alias __MODULE__
   alias ChessLogic.Position
 
+  @draw "1/2-1/2"
+  @white_win "1-0"
+  @black_win "0-1"
+
   @type fen() :: String.t()
   @type move() :: String.t()
   @type turn() :: %{
@@ -43,13 +47,13 @@ defmodule ChessLogic.Game do
     do
       {status, winner, result} = case game_status do
         :draw ->
-          {:over, nil, "1/2"}
+          {:over, nil, @draw}
         :checkmate ->
           w = opponent_color(turn)
           {:over, w, winner_result(w)}
         _ ->
           if is_three_times_repetition(game, new_current_pos) do
-            {:over, nil, "1/2"}
+            {:over, nil, @draw}
           else
             {:playing, nil, nil}
           end
@@ -78,7 +82,7 @@ defmodule ChessLogic.Game do
       :ok,
       %{game| 
         status: :over,
-        result: "1/2"
+        result: @draw
       }
     }
   end
@@ -109,8 +113,8 @@ defmodule ChessLogic.Game do
   defp opponent_color(:black), do: :white
   defp opponent_color(_), do: nil
   
-  defp winner_result(:white), do: "1-0"
-  defp winner_result(:black), do: "0-1"
+  defp winner_result(:white), do: @white_win
+  defp winner_result(:black), do: @black_win
   defp winner_result(_), do: nil
   
   # Check if the position repeats 3x

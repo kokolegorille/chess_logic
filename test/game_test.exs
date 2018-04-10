@@ -40,7 +40,7 @@ defmodule GameTest do
     assert {:ok, g} = Game.draw(g)
     assert g.status == :over
     assert g.winner == nil
-    assert g.result == "1/2"
+    assert g.result == "1/2-1/2"
   end
   
   test "cannot draw a game over" do
@@ -76,7 +76,7 @@ defmodule GameTest do
     
     assert g.status == :over
     assert g.winner == nil
-    assert g.result == "1/2"
+    assert g.result == "1/2-1/2"
   end
   
   test "can draw after 50 moves" do
