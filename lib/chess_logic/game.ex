@@ -4,6 +4,21 @@ defmodule ChessLogic.Game do
   alias __MODULE__
   alias ChessLogic.Position
 
+  @type fen() :: String.t()
+  @type move() :: String.t()
+  @type turn() :: %{
+    fen: fen(),
+    move: move()
+  }
+  @type error() :: {:error, term()}
+  @type t() :: %Game{
+    current_position: %Position{},
+    history: list(turn()),
+    status: atom(),
+    winner: String.t(),
+    result: String.t()
+  }
+  
   defstruct(
     current_position: nil,
     history: [],
@@ -12,11 +27,15 @@ defmodule ChessLogic.Game do
     result: nil
   )
 
+  @spec new(fen() | nil) :: t()
   def new(), do: %Game{current_position: Position.new()}
   def new(fen), do: %Game{current_position: Position.new(fen)}
   
+  @spec play(t(), move()) :: {:ok, t()} | error()
   def play(
-        %Game{current_position: current_pos, history: history, status: status} = game,
+        %Game{
+          current_position: current_pos, history: history, status: status
+        } = game,
         move
       ) when status != :over do
     with {:ok, new_current_pos} <- Position.play(current_pos, move), 
@@ -53,6 +72,7 @@ defmodule ChessLogic.Game do
   end
   def play(_game, move), do: {:error, "Could not play move #{move}"}
 
+  @spec draw(t()) :: {:ok, t()} | error()
   def draw(%Game{status: status} = game) when status != :over do
     {
       :ok,
@@ -63,8 +83,11 @@ defmodule ChessLogic.Game do
     }
   end
   def draw(_game), do: {:error, "Could not draw game"}
-  
-  def resign(%Game{current_position: current_pos, status: status} = game) when status != :over do
+
+  @spec resign(t()) :: {:ok, t()} | error()
+  def resign(%Game{current_position: current_pos, status: status} = game)
+    when status != :over 
+  do
     {_, turn} = Position.get_status(current_pos)
     w = opponent_color(turn)
     {
@@ -90,6 +113,7 @@ defmodule ChessLogic.Game do
   defp winner_result(:black), do: "0-1"
   defp winner_result(_), do: nil
   
+  # Check if the position repeats 3x
   defp is_three_times_repetition(%Game{history: history}, %Position{fen: fen}) do
     short_fen = shorten_fen(fen)
     
@@ -102,6 +126,7 @@ defmodule ChessLogic.Game do
     (length list) >= 2
   end
   
+  # Drop the last 2 fields from fen: half_move and full_move
   defp shorten_fen(fen) do
     fen
     |> String.split()
