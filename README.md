@@ -1,6 +1,6 @@
 # ChessLogic
 
-Functional Chess validator written in Elixir. Depends on Erlang fcardinaux/chessfold.
+Functional Chess validator written in Elixir. Depends on Erlang [fcardinaux/chessfold](https://github.com/fcardinaux/chessfold/blob/master/erl/chessfold.erl).
 
 It uses leex to parse sgf files, and chessfold to implement chess logic. Both in Erlang.
 
