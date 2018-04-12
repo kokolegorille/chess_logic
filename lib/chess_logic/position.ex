@@ -82,37 +82,10 @@ defmodule ChessLogic.Position do
   end
 
   @spec san_to_move(t(), String.t()) :: {:ok, String.t()} | error()
+  # Clean up san before sending to real implementation
   def san_to_move(%Position{} = position, san) do
-    case Regex.run(@san_regex, san) do
-      # extraxt fields from san with regex
-      # WARNING! "b1" => file+rank
-      
-      [_san, _piece, _prefix, _from_file, _from_rank, _capture, _to_rank, _to_file] = splitted_san ->
-        filter = build_san_filter(splitted_san)
-        
-        # Apply filters
-        selected_moves = position
-        |> all_possible_chessfold_moves()
-        |> Enum.filter(&filter.(&1))
-        
-        case length selected_moves do
-          0 -> 
-            {:error, "Could not transform san #{san} to move"}
-          1 ->
-            # One result match!
-            move = selected_moves
-            |> List.first()
-            |> chessfold_move_to_string()
-            
-            {:ok, move}
-          _ -> 
-            # Multiple moves available at this point!
-            {:error, "Ambiguous san #{san} to move"}
-        end
-        
-      _ ->
-        {:error, "Could not transform san #{san} to move"}
-    end
+    san = sanitize_san(san)
+    do_san_to_move(position, san)
   end
   
   @spec move_to_san(t(), String.t()) :: {:ok, String.t()} | error()
@@ -325,6 +298,56 @@ defmodule ChessLogic.Position do
     end
   end
   
+  # Real san_to_move implementation
+  defp do_san_to_move(%Position{fen: fen}, "O-O") do
+    [_, turn, _, _, _, _] = String.split(fen, " ")
+    case turn do
+      "w" -> {:ok, "e1g1"}
+      "b" -> {:ok, "e8g8"}
+    end
+  end
+  defp do_san_to_move(%Position{fen: fen}, "O-O-O") do
+    [_, turn, _, _, _, _] = String.split(fen, " ")
+    case turn do
+      "w" -> {:ok, "e1c1"}
+      "b" -> {:ok, "e8c8"}
+    end
+  end
+  defp do_san_to_move(%Position{} = position, san) do
+    san = sanitize_san(san)
+    
+    case Regex.run(@san_regex, san) do
+      # extraxt fields from san with regex
+      # WARNING! "b1" => file+rank
+      
+      [_san, _piece, _prefix, _from_file, _from_rank, _capture, _to_rank, _to_file] = splitted_san ->
+        filter = build_san_filter(splitted_san)
+        
+        # Apply filters
+        selected_moves = position
+        |> all_possible_chessfold_moves()
+        |> Enum.filter(&filter.(&1))
+        
+        case length selected_moves do
+          0 -> 
+            {:error, "Could not transform san #{san} to move"}
+          1 ->
+            # One result match!
+            move = selected_moves
+            |> List.first()
+            |> chessfold_move_to_string()
+            
+            {:ok, move}
+          _ -> 
+            # Multiple moves available at this point!
+            {:error, "Ambiguous san #{san} to move"}
+        end
+        
+      _ ->
+        {:error, "Could not transform san #{san} to move"}
+    end
+  end
+  
   # Helpers methods to reduce complexity of move_to_san, san_to_move
   
   defp castling_reply(false), do: {:ok, "O-O"}
@@ -346,4 +369,14 @@ defmodule ChessLogic.Position do
   def piece_symbol(buffer, true, true, pawn, _piece), do: buffer <> pawn
   def piece_symbol(buffer, true, false, _pawn, _piece), do: buffer
   def piece_symbol(buffer, false, _, _pawn, piece), do: buffer <> piece
+  
+  defp sanitize_san(san) do
+    san
+    |> String.trim()
+    |> String.replace("+", "")
+    |> String.replace("!", "")
+    |> String.replace("?", "")
+    |> String.replace_trailing("-", "")
+    |> String.replace_trailing("=", "")
+  end
 end

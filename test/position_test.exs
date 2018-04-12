@@ -36,6 +36,32 @@ defmodule PositionTest do
     assert Position.san_to_move(p, "Nf3d2") == {:ok, "f3d2"}
   end
   
+  test "can translate san castle" do
+    p = Position.new()
+    assert {:ok, p} = Position.play(p, "e2e4")
+    assert {:ok, p} = Position.play(p, "e7e5")
+    assert {:ok, p} = Position.play(p, "g1f3")
+    assert {:ok, p} = Position.play(p, "b8c6")
+    assert {:ok, p} = Position.play(p, "f1c4")
+    assert {:ok, p} = Position.play(p, "f8c5")
+    
+    assert {:ok, p} = Position.play(p, "b1c3")
+    assert {:ok, p} = Position.play(p, "g8f6")
+    assert {:ok, p} = Position.play(p, "d2d3")
+    assert {:ok, p} = Position.play(p, "d7d6")
+    assert {:ok, p} = Position.play(p, "c1g5")
+    assert {:ok, p} = Position.play(p, "c8g4")
+    assert {:ok, p} = Position.play(p, "d1d2")
+    assert {:ok, p} = Position.play(p, "d8d7")
+    
+    assert Position.san_to_move(p, "O-O") == {:ok, "e1g1"}
+    assert Position.san_to_move(p, "O-O-O") == {:ok, "e1c1"}
+    
+    assert {:ok, p} = Position.play(p, "e1c1")
+    assert Position.san_to_move(p, "O-O") == {:ok, "e8g8"}
+    assert Position.san_to_move(p, "O-O-O") == {:ok, "e8c8"}
+  end
+  
   # MOVE -> SAN
   
   test "can translate move san" do

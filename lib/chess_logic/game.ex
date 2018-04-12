@@ -10,9 +10,11 @@ defmodule ChessLogic.Game do
 
   @type fen() :: String.t()
   @type move() :: String.t()
+  @type san() :: String.t()
   @type turn() :: %{
     fen: fen(),
-    move: move()
+    move: move(),
+    san: san()
   }
   @type error() :: {:error, term()}
   @type t() :: %Game{
@@ -112,9 +114,48 @@ defmodule ChessLogic.Game do
   end
   def resign(_game), do: {:error, "Could not resign game"}
 
+  @spec to_pgn(t()) :: String.t()
+  def to_pgn(%Game{history: history}) do
+    history
+    |> Enum.reverse
+    |> Enum.map(& &1.san)
+    |> Enum.with_index()
+    |> Enum.chunk_every(2)
+    |> Enum.map(fn list ->
+      case list do
+        [{san1, index1}] ->
+          "#{round((index1 + 2) / 2)}. #{san1}"
+        [{san1, index1}, {san2, _index2}] ->
+          "#{round((index1 + 2) / 2)}. #{san1} #{san2}"
+      end
+    end)
+    |> Enum.join(" ")
+  end
+  
+  @spec from_pgn(String.t()) :: t()
+  def from_pgn(pgn) do
+    case pgn |> to_charlist |> :pgn_lexer.string() do
+      {:ok, tokens, _} ->
+        tokens
+        |> Enum.filter(fn {type, _, _} -> type == :san end)
+        |> Enum.map(fn {_, _, san} -> to_string san end)
+        # Play the move
+        |> Enum.reduce(ChessLogic.Game.new(), fn san, g -> 
+          {:ok, m} = ChessLogic.Position.san_to_move(g.current_position, san)
+          {:ok, g} = ChessLogic.Game.play(g, m)
+          g
+        end)
+      {:error, _, _} -> 
+        {:error, "Could not tokenize pgn"}
+    end
+  end
+
   # PRIVATE
 
-  defp new_history_item(position, move), do: %{fen: position.fen, move: move}
+  defp new_history_item(%Position{fen: fen} = position, move) do
+    {:ok, san} = ChessLogic.Position.move_to_san(position, move)
+    %{fen: fen, move: move, san: san}
+  end
   
   defp opponent_color(:white), do: :black
   defp opponent_color(:black), do: :white
