@@ -31,17 +31,33 @@ defmodule ChessLogic.Piece do
   def read_piece(" "), do: :empty
 
   @spec show_piece(t() | :empty) :: String.t()
-  def show_piece(%Piece{pcolor: :white, ptype: :king}), do: "K"
-  def show_piece(%Piece{pcolor: :white, ptype: :queen}), do: "Q"
-  def show_piece(%Piece{pcolor: :white, ptype: :rook}), do: "R"
+  def show_piece(%Piece{pcolor: :white, ptype: :king}),   do: "K"
+  def show_piece(%Piece{pcolor: :white, ptype: :queen}),  do: "Q"
+  def show_piece(%Piece{pcolor: :white, ptype: :rook}),   do: "R"
   def show_piece(%Piece{pcolor: :white, ptype: :bishop}), do: "B"
   def show_piece(%Piece{pcolor: :white, ptype: :knight}), do: "N"
-  def show_piece(%Piece{pcolor: :white, ptype: :pawn}), do: "P"
-  def show_piece(%Piece{pcolor: :black, ptype: :king}), do: "k"
-  def show_piece(%Piece{pcolor: :black, ptype: :queen}), do: "q"
-  def show_piece(%Piece{pcolor: :black, ptype: :rook}), do: "r"
+  def show_piece(%Piece{pcolor: :white, ptype: :pawn}),   do: "P"
+  def show_piece(%Piece{pcolor: :black, ptype: :king}),   do: "k"
+  def show_piece(%Piece{pcolor: :black, ptype: :queen}),  do: "q"
+  def show_piece(%Piece{pcolor: :black, ptype: :rook}),   do: "r"
   def show_piece(%Piece{pcolor: :black, ptype: :bishop}), do: "b"
   def show_piece(%Piece{pcolor: :black, ptype: :knight}), do: "n"
-  def show_piece(%Piece{pcolor: :black, ptype: :pawn}), do: "p"
+  def show_piece(%Piece{pcolor: :black, ptype: :pawn}),   do: "p"
   def show_piece(:empty), do: " "
+  
+  @spec read_piece_type(String.t()) :: atom()
+  def read_piece_type("K"), do: :king
+  def read_piece_type("Q"), do: :queen
+  def read_piece_type("R"), do: :rook
+  def read_piece_type("B"), do: :bishop
+  def read_piece_type("N"), do: :knight
+  def read_piece_type(_),   do: :pawn
+  
+  @spec show_piece_type(atom()) :: String.t()
+  def show_piece_type(:king),   do: "K"
+  def show_piece_type(:queen),  do: "Q"
+  def show_piece_type(:rook),   do: "R"
+  def show_piece_type(:bishop), do: "B"
+  def show_piece_type(:knight), do: "N"
+  def show_piece_type(_),       do: "p"
 end

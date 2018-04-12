@@ -1,7 +1,7 @@
 defmodule ChessLogic.PieceWithSquare do
   @moduledoc false
 
-  require Bitwise
+  import ChessLogic.CommonTools
   alias __MODULE__
   alias ChessLogic.Piece
 
@@ -32,16 +32,4 @@ defmodule ChessLogic.PieceWithSquare do
       }) do
     {:chessfold_piece, pcolor, ptype, square_to_sq0x88(square)}
   end
-
-  def square_to_sq0x88(%{rank: rank, file: file}), do: 16 * rank + file
-
-  def sq0x88_to_square(sq0x88) do
-    %{rank: sq0x88_to_rank(sq0x88), file: sq0x88_to_file(sq0x88)}
-  end
-
-  # PRIVATE
-
-  defp sq0x88_to_rank(sq0x88), do: Bitwise.>>>(sq0x88, 4)
-
-  defp sq0x88_to_file(sq0x88), do: Bitwise.band(sq0x88, 7)
 end

@@ -31,9 +31,16 @@ defmodule ChessLogic.Game do
     result: nil
   )
 
-  @spec new(fen() | nil) :: t()
-  def new(), do: %Game{current_position: Position.new()}
-  def new(fen), do: %Game{current_position: Position.new(fen)}
+  @spec new(fen()) :: t() | error()
+  def new(), do: new(nil)
+  def new(fen) do 
+    case Position.new(fen) do
+      %Position{} = position ->
+        %Game{current_position: position}
+      {:error, reason} -> 
+        {:error, reason}
+    end
+  end
   
   @spec play(t(), move()) :: {:ok, t()} | error()
   def play(

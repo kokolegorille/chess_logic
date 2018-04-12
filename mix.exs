@@ -8,7 +8,7 @@ defmodule ChessLogic.MixProject do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       # ADD THIS OPTION
-      erlc_paths: ["deps/chessfold/erl"],
+      erlc_paths: ["deps/chessfold/erl", "src"],
       dialyzer: [
         ignore_warnings: "dialyzer.ignore-warnings"
       ],
