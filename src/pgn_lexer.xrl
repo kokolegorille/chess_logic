@@ -3,12 +3,14 @@
 Definitions.
 
 TAG            = \[[^\]]*\]
-% Move number
+% Move number.
 MOVE           = [1-9][0-9]*\.(\.)?(\.)?
-% Short Algebric Notation
+% Short Algebric Notation.
 SAN  = ([BKNPQR])?(([a-h])?([1-8])?)(x)?([a-h])([1-8])(\s*[eE]\.?[pP]\.?\s*)?(=([BNQR]))?([\+#])?
 VARIATION      = \(.*\)
+% Comments wrapped in {} can be multilined.
 COMMENT        = {[^}]*}
+% Comments EOL starts with ; until the end of line.
 COMMENT_EOL    = ;.*
 MOVE_EVAL      = (!|!!|\?|\?\?|!\?|\?!)?
 POS_EVAL       = (=)?(\+=)?(=\+)?(\+\/=)?(=\/\+)?(\+\/-)?(-\+)?(\+\/-)?(-\/\+)?
