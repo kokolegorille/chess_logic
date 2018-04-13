@@ -120,4 +120,6 @@ iex(3)> {:ok, g} = ChessLogic.Game.play(g, "g8f6")
    status: :playing,
    winner: nil
  }}
+iex(4)> g |> ChessLogic.Game.to_pgn()
+"1. e4 Nf6"
 ```

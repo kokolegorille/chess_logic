@@ -113,6 +113,20 @@ defmodule ChessLogic.Game do
     }
   end
   def resign(_game), do: {:error, "Could not resign game"}
+  
+  @spec set_result(t(), String.t()) :: {:ok, t()} | error()
+  def set_result(%Game{status: status} = game, "1-0" = result) when status != :over do
+    {:ok, %{game | status: :over, winner: :white, result: result}}
+  end
+  def set_result(%Game{status: status} = game, "0-1" = result) when status != :over do
+    {:ok, %{game | status: :over, winner: :white, result: result}}
+  end
+  def set_result(%Game{status: status} = game, "1/2-1/2" = result) when status != :over do
+    {:ok, %{game | status: :over, result: result}}
+  end
+  def set_result(_game, result)  do
+    {:error, "Could not set result #{result}"}
+  end
 
   @spec to_pgn(t()) :: String.t()
   def to_pgn(%Game{history: history}) do
@@ -123,8 +137,10 @@ defmodule ChessLogic.Game do
     |> Enum.chunk_every(2)
     |> Enum.map(fn list ->
       case list do
+        # The last move is from white
         [{san1, index1}] ->
           "#{round((index1 + 2) / 2)}. #{san1}"
+        # A list with white/black move
         [{san1, index1}, {san2, _index2}] ->
           "#{round((index1 + 2) / 2)}. #{san1} #{san2}"
       end

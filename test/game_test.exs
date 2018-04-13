@@ -129,4 +129,17 @@ defmodule GameTest do
     
     assert Game.to_pgn(g) == "1. d4 d5 2. c4 e6 3. Nc3 Nf6 4. cxd5 exd5"
   end
+  
+  test "can set result" do
+    g = Game.new()
+    assert {:ok, _g} = Game.set_result(g, "1-0")
+    assert {:ok, _g} = Game.set_result(g, "0-1")
+    assert {:ok, _g} = Game.set_result(g, "1/2-1/2")
+    assert {:error, _} = Game.set_result(g, "1-1")
+    
+    assert {:ok, g} = Game.set_result(g, "1-0")
+    assert g.status == :over
+    assert g.winner == :white
+    assert g.result == "1-0"
+  end
 end
