@@ -40,11 +40,11 @@ Documentation can be found at [https://hexdocs.pm/chess_logic](https://hexdocs.p
 
 ## Erlang and dialyxir configuration
 
-Because of some warnings detected in Erlang outside code (chessfold, leex), it is nice to configure dialyxir to avoid them... It is also important to specify chessfold dependency path in erlc_paths.
+Because of some warnings detected in Erlang outside code (chessfold, leex), it is nice to configure dialyxir to avoid them... 
 
 Update mix.exs
 
-      erlc_paths: ["deps/chessfold/erl", "src"],
+      erlc_paths: ["src"],
       dialyzer: [
         ignore_warnings: "dialyzer.ignore-warnings"
       ],
