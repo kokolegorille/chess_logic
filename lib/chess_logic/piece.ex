@@ -1,5 +1,10 @@
 defmodule ChessLogic.Piece do
-  @moduledoc false
+  @moduledoc """
+  Documentation for Piece.
+  
+  Helper functions a la Haskell, to display/load a piece, or piece type.
+  
+  """
 
   alias __MODULE__
 
@@ -15,6 +20,9 @@ defmodule ChessLogic.Piece do
     ptype: nil
   )
 
+  @doc ~S"""
+  char -> piece.
+  """
   @spec read_piece(String.t()) :: t() | :empty
   def read_piece("K"), do: %Piece{pcolor: :white, ptype: :king}
   def read_piece("Q"), do: %Piece{pcolor: :white, ptype: :queen}
@@ -30,6 +38,9 @@ defmodule ChessLogic.Piece do
   def read_piece("p"), do: %Piece{pcolor: :black, ptype: :pawn}
   def read_piece(" "), do: :empty
 
+  @doc ~S"""
+  piece -> char.
+  """
   @spec show_piece(t() | :empty) :: String.t()
   def show_piece(%Piece{pcolor: :white, ptype: :king}),   do: "K"
   def show_piece(%Piece{pcolor: :white, ptype: :queen}),  do: "Q"
@@ -45,6 +56,9 @@ defmodule ChessLogic.Piece do
   def show_piece(%Piece{pcolor: :black, ptype: :pawn}),   do: "p"
   def show_piece(:empty), do: " "
   
+  @doc ~S"""
+  char -> piece_type.
+  """
   @spec read_piece_type(String.t()) :: atom()
   def read_piece_type("K"), do: :king
   def read_piece_type("Q"), do: :queen
@@ -53,6 +67,9 @@ defmodule ChessLogic.Piece do
   def read_piece_type("N"), do: :knight
   def read_piece_type(_),   do: :pawn
   
+  @doc ~S"""
+  piece_type -> char.
+  """
   @spec show_piece_type(atom()) :: String.t()
   def show_piece_type(:king),   do: "K"
   def show_piece_type(:queen),  do: "Q"

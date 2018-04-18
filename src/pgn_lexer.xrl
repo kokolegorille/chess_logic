@@ -1,5 +1,3 @@
-% https://searchcode.com/file/74463574/pgn.go
-
 Definitions.
 
 TAG            = \[[^\]]*\]

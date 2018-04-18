@@ -12,7 +12,7 @@
 -export([format_error/1]).
 
 %% User code. This is placed here to allow extra attributes.
--file("src/pgn_lexer.xrl", 39).
+-file("src/pgn_lexer.xrl", 37).
 
 -file("/Users/sqrt/.asdf/installs/erlang/20.1/lib/erlang/lib/parsetools-2.1.5/include/leexinc.hrl", 14).
 
@@ -845,62 +845,62 @@ yyaction(11, _, _, _) ->
 yyaction(_, _, _, _) -> error.
 
 -compile({inline,yyaction_0/2}).
--file("src/pgn_lexer.xrl", 22).
+-file("src/pgn_lexer.xrl", 20).
 yyaction_0(TokenChars, TokenLine) ->
      { token, { tag, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_1/2}).
--file("src/pgn_lexer.xrl", 23).
+-file("src/pgn_lexer.xrl", 21).
 yyaction_1(TokenChars, TokenLine) ->
      { token, { move, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_2/2}).
--file("src/pgn_lexer.xrl", 24).
+-file("src/pgn_lexer.xrl", 22).
 yyaction_2(TokenChars, TokenLine) ->
      { token, { san, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_3/2}).
--file("src/pgn_lexer.xrl", 25).
+-file("src/pgn_lexer.xrl", 23).
 yyaction_3(TokenChars, TokenLine) ->
      { token, { variation, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_4/2}).
--file("src/pgn_lexer.xrl", 27).
+-file("src/pgn_lexer.xrl", 25).
 yyaction_4(TokenChars, TokenLine) ->
      { token, { comment, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_5/2}).
--file("src/pgn_lexer.xrl", 28).
+-file("src/pgn_lexer.xrl", 26).
 yyaction_5(TokenChars, TokenLine) ->
      { token, { comment, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_6/2}).
--file("src/pgn_lexer.xrl", 29).
+-file("src/pgn_lexer.xrl", 27).
 yyaction_6(TokenChars, TokenLine) ->
      { token, { move_eval, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_7/2}).
--file("src/pgn_lexer.xrl", 30).
+-file("src/pgn_lexer.xrl", 28).
 yyaction_7(TokenChars, TokenLine) ->
      { token, { pos_eval, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_8/2}).
--file("src/pgn_lexer.xrl", 31).
+-file("src/pgn_lexer.xrl", 29).
 yyaction_8(TokenChars, TokenLine) ->
      { token, { nag, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_9/2}).
--file("src/pgn_lexer.xrl", 33).
+-file("src/pgn_lexer.xrl", 31).
 yyaction_9(TokenChars, TokenLine) ->
      { token, { san, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_10/2}).
--file("src/pgn_lexer.xrl", 34).
+-file("src/pgn_lexer.xrl", 32).
 yyaction_10(TokenChars, TokenLine) ->
      { token, { result, TokenLine, TokenChars } } .
 
 -compile({inline,yyaction_11/0}).
--file("src/pgn_lexer.xrl", 35).
+-file("src/pgn_lexer.xrl", 33).
 yyaction_11() ->
      skip_token .
 

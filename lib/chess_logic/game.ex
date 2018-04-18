@@ -1,5 +1,11 @@
 defmodule ChessLogic.Game do
-  @moduledoc false
+  @moduledoc """
+  Documentation for Game.
+  
+  The main entity, 
+  
+  April 2018, klg
+  """
 
   alias __MODULE__
   alias ChessLogic.Position
@@ -33,6 +39,19 @@ defmodule ChessLogic.Game do
     result: nil
   )
 
+  @doc ~S"""
+  Returns a new game.
+  
+  ## Examples
+  
+      iex> alias ChessLogic
+      iex> game = Game.new()
+      iex> {:ok, game} = game |> Game.play("e2e4")
+      iex> {:ok, game} = game |> Game.play("c7c5")
+      iex> game.current_position.fen
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+  
+  """
   @spec new(fen()) :: t() | error()
   def new(), do: new(nil)
   def new(fen) do 
@@ -44,6 +63,9 @@ defmodule ChessLogic.Game do
     end
   end
   
+  @doc ~S"""
+  Play a move. a move looks like "e2e4".
+  """
   @spec play(t(), move()) :: {:ok, t()} | error()
   def play(
         %Game{
@@ -85,6 +107,9 @@ defmodule ChessLogic.Game do
   end
   def play(_game, move), do: {:error, "Could not play move #{move}"}
 
+  @doc ~S"""
+  Set the result to draw.
+  """
   @spec draw(t()) :: {:ok, t()} | error()
   def draw(%Game{status: status} = game) when status != :over do
     {
@@ -97,6 +122,9 @@ defmodule ChessLogic.Game do
   end
   def draw(_game), do: {:error, "Could not draw game"}
 
+  @doc ~S"""
+  Resign a game.
+  """
   @spec resign(t()) :: {:ok, t()} | error()
   def resign(%Game{current_position: current_pos, status: status} = game)
     when status != :over 
@@ -113,7 +141,10 @@ defmodule ChessLogic.Game do
     }
   end
   def resign(_game), do: {:error, "Could not resign game"}
-  
+
+  @doc ~S"""
+  Set result of the game.
+  """
   @spec set_result(t(), String.t()) :: {:ok, t()} | error()
   def set_result(%Game{status: status} = game, "1-0" = result) when status != :over do
     {:ok, %{game | status: :over, winner: :white, result: result}}
@@ -128,6 +159,9 @@ defmodule ChessLogic.Game do
     {:error, "Could not set result #{result}"}
   end
 
+  @doc ~S"""
+  Export the move list history to pgn string.
+  """
   @spec to_pgn(t()) :: String.t()
   def to_pgn(%Game{history: history}) do
     history
@@ -148,6 +182,9 @@ defmodule ChessLogic.Game do
     |> Enum.join(" ")
   end
   
+  @doc ~S"""
+  Import pgn into a game.
+  """
   @spec from_pgn(String.t()) :: t()
   def from_pgn(pgn) do
     case pgn |> to_charlist |> :pgn_lexer.string() do

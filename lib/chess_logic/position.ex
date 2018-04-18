@@ -1,5 +1,11 @@
 defmodule ChessLogic.Position do
-  @moduledoc false
+  @moduledoc """
+  Documentation for Position.
+  
+  This is the main interface to chessfold functions.
+  It is used mainly by Game.
+  
+  """
 
   import ChessLogic.CommonTools
   alias __MODULE__
@@ -30,6 +36,10 @@ defmodule ChessLogic.Position do
     position: nil
   )
 
+  @doc ~S"""
+  Returns a new position from a fen string.
+  Returns default position if fen is not given.
+  """
   @spec new(fen() | nil) :: t() | error()
   def new(fen \\ @initial_fen_position)
   def new(fen) when is_nil(fen), do: new(@initial_fen_position)
@@ -47,6 +57,9 @@ defmodule ChessLogic.Position do
     end
   end
   
+  @doc ~S"""
+  Play a move. a move looks like "e2e4".
+  """
   @spec play(t(), move()) :: {:ok, t()} | error()
   def play(%Position{} = position, move) when is_binary(move) do
     case filter_move(position, move) do
@@ -64,6 +77,9 @@ defmodule ChessLogic.Position do
     end
   end
 
+  @doc ~S"""
+  Returns a list of all available moves, represented as string.
+  """
   @spec all_possible_moves(t()) :: list(move())
   def all_possible_moves(%Position{} = position) do
     position
@@ -71,6 +87,9 @@ defmodule ChessLogic.Position do
     |> Enum.map(&chessfold_move_to_string(&1))
   end
 
+  @doc ~S"""
+  Returns a list of pieces with square from a given position.
+  """
   @spec list_pieces_with_square(t()) :: list(term())
   def list_pieces_with_square(%Position{} = position) do
     with {:chessfold_position, pieces, _, _, _, _, _} <- to_chessfold_position(position) do
@@ -81,13 +100,19 @@ defmodule ChessLogic.Position do
     end
   end
 
+  @doc ~S"""
+  Transforms a short algebraic notation to a move. eg. "Nf3" -> "g1f3".
+  """
   @spec san_to_move(t(), String.t()) :: {:ok, String.t()} | error()
   # Clean up san before sending to real implementation
   def san_to_move(%Position{} = position, san) do
     san = sanitize_san(san)
     do_san_to_move(position, san)
   end
-  
+
+  @doc ~S"""
+  Transforms a move to a short algebraic notation. eg. "g1f3" -> "Nf3".
+  """
   @spec move_to_san(t(), String.t()) :: {:ok, String.t()} | error()
   # https://chess.stackexchange.com/questions/9470/converting-square-notation-to-algebraic-notation-programmatically
   def move_to_san(%Position{} = position, move) do
@@ -142,7 +167,10 @@ defmodule ChessLogic.Position do
         {:error, "Could not transform move #{move} to san"}
     end
   end
-    
+
+  @doc ~S"""
+  Returns the tally of the position.
+  """
   def get_status(%Position{} = position) do
     chessfold_position = position
     |> to_chessfold_position()

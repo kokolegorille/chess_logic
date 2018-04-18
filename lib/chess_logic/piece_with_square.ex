@@ -1,5 +1,10 @@
 defmodule ChessLogic.PieceWithSquare do
-  @moduledoc false
+  @moduledoc """
+  Documentation for PieceWithSquare.
+  
+  Transform chessfold data into current app data, and back...
+  
+  """
 
   import ChessLogic.CommonTools
   alias __MODULE__
@@ -19,6 +24,9 @@ defmodule ChessLogic.PieceWithSquare do
     square: nil
   )
 
+  @doc ~S"""
+  chessfld -> piece_with_square.
+  """
   def from_chessfold_piece({:chessfold_piece, pcolor, ptype, sq0x88}) do
     %PieceWithSquare{
       piece: %Piece{ptype: ptype, pcolor: pcolor},
@@ -26,6 +34,9 @@ defmodule ChessLogic.PieceWithSquare do
     }
   end
 
+  @doc ~S"""
+  piece_with_square -> chessfld.
+  """
   def to_chessfold_piece(%PieceWithSquare{
         piece: %Piece{ptype: ptype, pcolor: pcolor},
         square: square

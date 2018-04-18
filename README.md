@@ -36,6 +36,26 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/chess_logic](https://hexdocs.pm/chess_logic).
 
+## Erlang and dialyxir configuration
+
+Because of some warnings detected in Erlang outside code (chessfold, leex), it is nice to configure dialyxir to avoid them... It is also important to specify chessfold dependency path in erlc_paths.
+
+Update mix.exs
+
+      erlc_paths: ["deps/chessfold/erl", "src"],
+      dialyzer: [
+        ignore_warnings: "dialyzer.ignore-warnings"
+      ],
+
+Add file ./dialyzer.ignore-warnings
+
+```elixir
+Unknown function chessfold
+Guard test RowId::0
+The variable _ can never match since previous clauses completely covered the type
+Function yyrev/2 will never be called
+```
+
 ## Sample usage
 
 More sample usage in the test folder.
