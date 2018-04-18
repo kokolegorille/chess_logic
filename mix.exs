@@ -12,6 +12,8 @@ defmodule ChessLogic.MixProject do
       dialyzer: [
         ignore_warnings: "dialyzer.ignore-warnings"
       ],
+      description: description(),
+      package: package(),
       deps: deps()
     ]
   end
@@ -35,6 +37,23 @@ defmodule ChessLogic.MixProject do
       {:dialyxir, "~> 0.5.1", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.18.3", only: :dev, runtime: false},
       {:credo, "~> 0.8.10", only: [:dev], runtime: false}
+    ]
+  end
+  
+  defp description do
+    """
+    Elixir struct for playing the game of chess.
+    """
+  end
+  
+  defp package do
+    # These are the default files included in the package
+    [
+      name: :chess_logic,
+      files: ["lib", "mix.exs", "README*"],
+      maintainers: ["koko.le.gorille"],
+      licenses: ["Apache 2.0"],
+      links: %{"GitHub" => "https://github.com/kokolegorille/chess_logic"}
     ]
   end
 end

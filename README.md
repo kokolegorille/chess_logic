@@ -1,5 +1,8 @@
 # ChessLogic
 
+## Description
+
+This package contains logic to play the game of chess. 
 Functional Chess validator written in Elixir. Depends on Erlang [fcardinaux/chessfold](https://github.com/fcardinaux/chessfold/blob/master/erl/chessfold.erl).
 
 It uses leex to parse pgn files, and chessfold to implement chess logic. Both in Erlang.
@@ -21,20 +24,17 @@ It also supports importing/exporting pgn files.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `chess_logic` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `chess_logic` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [
-    {:chess_logic, "~> 0.1.0"}
-  ]
+  [{:chess_logic, "~> 0.1.0"}]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/chess_logic](https://hexdocs.pm/chess_logic).
+[Available in Hex](https://hex.pm/packages/chess_logic).
+
+Documentation can be found at [https://hexdocs.pm/chess_logic](https://hexdocs.pm/chess_logic).
 
 ## Erlang and dialyxir configuration
 
