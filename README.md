@@ -3,7 +3,9 @@
 ## Description
 
 This package contains logic to play the game of chess. 
-Functional Chess validator written in Elixir. Depends on Erlang [fcardinaux/chessfold](https://github.com/fcardinaux/chessfold/blob/master/erl/chessfold.erl).
+Functional Chess validator written in Elixir. 
+
+It includes [fcardinaux/chessfold](https://github.com/fcardinaux/chessfold/blob/master/erl/chessfold.erl) source files, as hex does not permit non hex dependencies.
 
 It uses leex to parse pgn files, and chessfold to implement chess logic. Both in Erlang.
 
