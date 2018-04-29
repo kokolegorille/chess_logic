@@ -4,11 +4,9 @@ defmodule ChessLogic.MixProject do
   def project do
     [
       app: :chess_logic,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
-      # ADD THIS OPTION
-      # erlc_paths: ["deps/chessfold/erl", "src"],
       erlc_paths: ["src"],
       
       dialyzer: [
