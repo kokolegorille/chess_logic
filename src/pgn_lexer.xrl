@@ -1,37 +1,54 @@
+%%%%%%%%%%%%%%%%%%%%
+%% Definitions
+%%%%%%%%%%%%%%%%%%%%
+
 Definitions.
 
 TAG            = \[[^\]]*\]
-% Move number.
 MOVE           = [1-9][0-9]*\.(\.)?(\.)?
-% Short Algebric Notation.
-SAN  = ([BKNPQR])?(([a-h])?([1-8])?)(x)?([a-h])([1-8])(\s*[eE]\.?[pP]\.?\s*)?(=([BNQR]))?([\+#])?
-VARIATION      = \(.*\)
-% Comments wrapped in {} can be multilined.
+
+% There is an ambiguity on 26.Nxc8+- as the plus can be seen as check!
+SAN            = ([BKNPQR])?(([a-h])?([1-8])?)(x)?([a-h])([1-8])(\s*[eE]\.?[pP]\.?\s*)?(=([BNQR]))?([\+#]-?)?
+POS_EVAL       = (=)?(\+=)?(=\+)?(\+\/=)?(=\/\+)?(\+-)?(-\+)?(\+\/-)?(-\+)?(\+\/-)?(-\/\+)?(\x{00B1})?(\x{2213})?
+
 COMMENT        = {[^}]*}
-% Comments EOL starts with ; until the end of line.
 COMMENT_EOL    = ;.*
 MOVE_EVAL      = (!|!!|\?|\?\?|!\?|\?!)?
-POS_EVAL       = (=)?(\+=)?(=\+)?(\+\/=)?(=\/\+)?(\+\/-)?(-\+)?(\+\/-)?(-\/\+)?
+
 NAG            = \$[0-9]*
 CASTLING       = O-O(-O)?
 RESULT         = 1-0|0-1|1\/2-1\/2|\*
-WHITESPACE     = [\s\t\n\r]
+
+WHITESPACE     = [\s\t]
+TERMINATOR     = [\n\r]
+
+%%%%%%%%%%%%%%%%%%%%
+%% Rules
+%%%%%%%%%%%%%%%%%%%%
 
 Rules.
 
-{TAG}            : {token, {tag, TokenLine, TokenChars}}.
-{MOVE}           : {token, {move, TokenLine, TokenChars}}.
-{SAN}            : {token, {san, TokenLine, TokenChars}}.
-{VARIATION}      : {token, {variation, TokenLine, TokenChars}}.
-% Both comments
-{COMMENT}        : {token, {comment, TokenLine, TokenChars}}.
-{COMMENT_EOL}    : {token, {comment, TokenLine, TokenChars}}.
-{MOVE_EVAL}      : {token, {move_eval, TokenLine, TokenChars}}.
-{POS_EVAL}       : {token, {pos_eval, TokenLine, TokenChars}}.
-{NAG}            : {token, {nag, TokenLine, TokenChars}}.
-% Castling is also a san
-{CASTLING}       : {token, {san, TokenLine, TokenChars}}.
-{RESULT}         : {token, {result, TokenLine, TokenChars}}.
-{WHITESPACE}+    : skip_token.
+\(             : {token, {'(', TokenLine}}.
+\)             : {token, {')', TokenLine}}.
+
+{POS_EVAL}     : {token, {pos_eval, TokenLine, TokenChars}}.
+
+{TAG}          : {token, {tag, TokenLine, TokenChars}}.
+{MOVE}         : {token, {move, TokenLine, TokenChars}}.
+{SAN}          : {token, {san, TokenLine, TokenChars}}.
+{COMMENT}      : {token, {comment, TokenLine, TokenChars}}.
+{COMMENT_EOL}  : {token, {comment, TokenLine, TokenChars}}.
+{MOVE_EVAL}    : {token, {move_eval, TokenLine, TokenChars}}.
+
+{NAG}          : {token, {nag, TokenLine, TokenChars}}.
+{CASTLING}     : {token, {san, TokenLine, TokenChars}}.
+{RESULT}       : {token, {result, TokenLine, TokenChars}}.
+
+{WHITESPACE}+  : skip_token.
+{TERMINATOR}+  : skip_token.
+
+%%%%%%%%%%%%%%%%%%%%
+%% Erlang code
+%%%%%%%%%%%%%%%%%%%%
 
 Erlang code.

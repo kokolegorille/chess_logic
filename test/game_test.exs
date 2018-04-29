@@ -95,24 +95,21 @@ defmodule GameTest do
     filename = "./test/fixtures/sample.pgn"    
     assert File.exists? filename
     
-    {:ok, file} = File.read(filename)
-    pgn = file |> String.to_charlist
-    {:ok, tokens, _end_line} = :pgn_lexer.string pgn
-    assert (length tokens) > 0
+    {:ok, pgn} = File.read(filename)
+    games = Game.from_pgn(pgn)
+    g = games |> List.first
     
-    assert %Game{} = g = Game.from_pgn(file)
     assert Game.to_pgn(g) == "1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10. d4 Nd7 11. c4 c6 12. cxb5 axb5 13. Nc3 Bb7 14. Bg5 b4 15. Nb1 h6 16. Bh4 c5 17. dxe5 Nxe4 18. Bxe7 Qxe7 19. exd6 Qf6 20. Nd2 Nxd6 21. Nc4 Nxc4 22. Bxc4 Nb6 23. Ne5 Re8 24. Bxf7+ Rxf7 25. Nxf7 Rxe1+ 26. Qxe1 Kxf7 27. Qe3 Qg5 28. Qxg5 hxg5 29. b3 Ke6 30. a3 Kd6 31. axb4 cxb4 32. Ra5 Nd5 33. f3 Bc8 34. Kf2 Bf5 35. Ra7 g6 36. Ra6+ Kc5 37. Ke1 Nf4 38. g3 Nxh3 39. Kd2 Kb5 40. Rd6 Kc5 41. Ra6 Nf2 42. g4 Bd3 43. Re6"
   end
   
   test "can load data from complex pgn" do
     filename = "./test/fixtures/complex.pgn"    
     assert File.exists? filename
-    {:ok, file} = File.read(filename)
-    pgn = file |> String.to_charlist
-    {:ok, tokens, _end_line} = :pgn_lexer.string pgn
-    assert (length tokens) > 0
     
-    assert %Game{} = g = Game.from_pgn(file)
+    {:ok, pgn} = File.read(filename)
+    games = Game.from_pgn(pgn)
+    g = games |> List.first
+    
     assert Game.to_pgn(g) == "1. e4 c5 2. Nf3 e6 3. d4 cxd4 4. Nxd4 Nc6 5. Nc3 a6 6. Be2 Qc7 7. O-O Nf6 8. Be3 Bb4 9. Na4 O-O 10. c4 Bd6 11. g3 Nxe4 12. Bf3 f5 13. Bxe4 fxe4 14. c5 Be7 15. Qg4 Ne5 16. Qxe4 d5 17. cxd6 Bxd6 18. Rc1 Qa5 19. Nb3 Qb4 20. Qxb4 Bxb4 21. Nb6 Rb8 22. Bc5 Bxc5 23. Nxc5 Rd8 24. Rd1 Re8 25. Ne4 Nf7 26. Rc7 Kf8 27. Rc1"
   end
   

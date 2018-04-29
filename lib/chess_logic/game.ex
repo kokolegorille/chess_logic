@@ -187,22 +187,40 @@ defmodule ChessLogic.Game do
   """
   @spec from_pgn(String.t()) :: t()
   def from_pgn(pgn) do
-    case pgn |> to_charlist |> :pgn_lexer.string() do
-      {:ok, tokens, _} ->
-        tokens
-        |> Enum.filter(fn {type, _, _} -> type == :san end)
-        |> Enum.map(fn {_, _, san} -> to_string san end)
-        # Play the move
-        |> Enum.reduce(ChessLogic.Game.new(), fn san, g -> 
-          {:ok, m} = ChessLogic.Position.san_to_move(g.current_position, san)
-          {:ok, g} = ChessLogic.Game.play(g, m)
-          g
-        end)
-      {:error, _, _} -> 
-        {:error, "Could not tokenize pgn"}
-    end
+    {:ok, tokens, _} = pgn
+    |> String.trim("\uFEFF")
+    |> to_charlist 
+    |> :pgn_lexer.string()
+    
+    {:ok, syntax_tree} = tokens |> :pgn_parser.parse()
+    
+    syntax_tree 
+    |> Enum.map(fn {:tree, _tags, elems} -> 
+      
+      elems
+      |> Enum.filter(fn elem -> 
+        case elem do
+          {type, _, _} -> type == :san
+          # Variation are tuple with 2 elements
+          {_, _} -> false
+        end
+      end)      
+      |> Enum.reduce(Game.new(), fn {:san, _, san}, g ->
+        
+        case Position.san_to_move(g.current_position, to_string(san)) do
+          {:ok, m} ->
+            {:ok, g} = Game.play(g, m)
+            g
+          {:error, reason} ->
+            IO.puts "Could not process game tokens #{reason} for #{inspect g}"
+            g
+        end
+        
+      end)
+      
+    end)
   end
-
+    
   # PRIVATE
 
   defp new_history_item(%Position{fen: fen} = position, move) do
