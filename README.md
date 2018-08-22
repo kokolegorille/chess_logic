@@ -30,9 +30,11 @@ The package can be installed by adding `chess_logic` to your list of dependencie
 
 ```elixir
 def deps do
-  [{:chess_logic, "~> 0.1.0"}]
+  [{:chess_logic, "~> 0.2.2"}]
 end
 ```
+
+Version 0.2.0 and 0.2.1 broken! mix did not include src folder! Update to version 0.2.2!
 
 [Available in Hex](https://hex.pm/packages/chess_logic).
 
