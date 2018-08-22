@@ -159,67 +159,67 @@ defmodule ChessLogic.Game do
     {:error, "Could not set result #{result}"}
   end
 
-  # @doc ~S"""
-  # Export the move list history to pgn string.
-  # """
-  # @spec to_pgn(t()) :: String.t()
-  # def to_pgn(%Game{history: history}) do
-  #   history
-  #   |> Enum.reverse
-  #   |> Enum.map(& &1.san)
-  #   |> Enum.with_index()
-  #   |> Enum.chunk_every(2)
-  #   |> Enum.map(fn list ->
-  #     case list do
-  #       # The last move is from white
-  #       [{san1, index1}] ->
-  #         "#{round((index1 + 2) / 2)}. #{san1}"
-  #       # A list with white/black move
-  #       [{san1, index1}, {san2, _index2}] ->
-  #         "#{round((index1 + 2) / 2)}. #{san1} #{san2}"
-  #     end
-  #   end)
-  #   |> Enum.join(" ")
-  # end
-  
-  # @doc ~S"""
-  # Import pgn into a game.
-  # """
-  # @spec from_pgn(String.t()) :: t()
-  # def from_pgn(pgn) do
-  #   {:ok, tokens, _} = pgn
-  #   |> String.trim("\uFEFF")
-  #   |> to_charlist
-  #   |> :pgn_lexer.string()
-  #
-  #   {:ok, syntax_tree} = tokens |> :pgn_parser.parse()
-  #
-  #   syntax_tree
-  #   |> Enum.map(fn {:tree, _tags, elems} ->
-  #
-  #     elems
-  #     |> Enum.filter(fn elem ->
-  #       case elem do
-  #         {type, _, _} -> type == :san
-  #         # Variation are tuple with 2 elements
-  #         {_, _} -> false
-  #       end
-  #     end)
-  #     |> Enum.reduce(Game.new(), fn {:san, _, san}, g ->
-  #
-  #       case Position.san_to_move(g.current_position, to_string(san)) do
-  #         {:ok, m} ->
-  #           {:ok, g} = Game.play(g, m)
-  #           g
-  #         {:error, reason} ->
-  #           IO.puts "Could not process game tokens #{reason} for #{inspect g}"
-  #           g
-  #       end
-  #
-  #     end)
-  #
-  #   end)
-  # end
+  @doc ~S"""
+  Export the move list history to pgn string.
+  """
+  @spec to_pgn(t()) :: String.t()
+  def to_pgn(%Game{history: history}) do
+    history
+    |> Enum.reverse
+    |> Enum.map(& &1.san)
+    |> Enum.with_index()
+    |> Enum.chunk_every(2)
+    |> Enum.map(fn list ->
+      case list do
+        # The last move is from white
+        [{san1, index1}] ->
+          "#{round((index1 + 2) / 2)}. #{san1}"
+        # A list with white/black move
+        [{san1, index1}, {san2, _index2}] ->
+          "#{round((index1 + 2) / 2)}. #{san1} #{san2}"
+      end
+    end)
+    |> Enum.join(" ")
+  end
+
+  @doc ~S"""
+  Import pgn into a game.
+  """
+  @spec from_pgn(String.t()) :: t()
+  def from_pgn(pgn) do
+    {:ok, tokens, _} = pgn
+    |> String.trim("\uFEFF")
+    |> to_charlist
+    |> :pgn_lexer.string()
+
+    {:ok, syntax_tree} = tokens |> :pgn_parser.parse()
+
+    syntax_tree
+    |> Enum.map(fn {:tree, _tags, elems} ->
+
+      elems
+      |> Enum.filter(fn elem ->
+        case elem do
+          {type, _, _} -> type == :san
+          # Variation are tuple with 2 elements
+          {_, _} -> false
+        end
+      end)
+      |> Enum.reduce(Game.new(), fn {:san, _, san}, g ->
+
+        case Position.san_to_move(g.current_position, to_string(san)) do
+          {:ok, m} ->
+            {:ok, g} = Game.play(g, m)
+            g
+          {:error, reason} ->
+            IO.puts "Could not process game tokens #{reason} for #{inspect g}"
+            g
+        end
+
+      end)
+
+    end)
+  end
     
   # PRIVATE
 
