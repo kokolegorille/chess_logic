@@ -7,9 +7,9 @@ defmodule ChessLogic.MixProject do
       version: "0.2.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
-      erlc_paths: ["src"],
-      
+      # erlc_paths: ["src"],
       dialyzer: [
+        plt_add_deps: :transitive,
         ignore_warnings: "dialyzer.ignore-warnings"
       ],
       description: description(),
@@ -35,9 +35,9 @@ defmodule ChessLogic.MixProject do
       # {:chessfold, github: "fcardinaux/chessfold", app: false},
 
       # Development
-      {:dialyxir, "~> 0.5.1", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.3", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.18.3", only: :dev, runtime: false},
-      {:credo, "~> 0.8.10", only: [:dev], runtime: false}
+      {:credo, "~> 0.10.0", only: [:dev], runtime: false}
     ]
   end
   
