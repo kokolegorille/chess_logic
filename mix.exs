@@ -4,7 +4,7 @@ defmodule ChessLogic.MixProject do
   def project do
     [
       app: :chess_logic,
-      version: "0.2.1",
+      version: "0.2.2",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       # erlc_paths: ["src"],
@@ -51,7 +51,7 @@ defmodule ChessLogic.MixProject do
     # These are the default files included in the package
     [
       name: :chess_logic,
-      files: ["lib", "mix.exs", "README*"],
+      files: ["lib", "mix.exs", "README*", "BUILD*","src"],
       maintainers: ["koko.le.gorille"],
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/kokolegorille/chess_logic"}
