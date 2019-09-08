@@ -281,7 +281,7 @@ defmodule ChessLogic.Position do
       :chessfold_move, 
       {:chessfold_piece, _color, piece, from_sq0x88} = _from, 
       {:chessfold_piece, _color, _piece, to_sq0x88} = _to, 
-      _newPos, 
+      _new_pos, 
       _castling, 
       _taken
     } -> 

@@ -7,7 +7,7 @@ defmodule ChessLogic.MixProject do
       version: "0.2.2",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
-      # erlc_paths: ["src"],
+      erlc_paths: ["src"],
       dialyzer: [
         plt_add_deps: :transitive,
         ignore_warnings: "dialyzer.ignore-warnings"

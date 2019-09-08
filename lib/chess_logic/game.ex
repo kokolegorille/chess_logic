@@ -1,9 +1,9 @@
 defmodule ChessLogic.Game do
   @moduledoc """
   Documentation for Game.
-  
-  The main entity, 
-  
+
+  The main entity,
+
   April 2018, klg
   """
 
@@ -30,7 +30,7 @@ defmodule ChessLogic.Game do
     winner: String.t(),
     result: String.t()
   }
-  
+
   defstruct(
     current_position: nil,
     history: [],
@@ -41,28 +41,27 @@ defmodule ChessLogic.Game do
 
   @doc ~S"""
   Returns a new game.
-  
+
   ## Examples
-  
+
       iex> alias ChessLogic
       iex> game = Game.new()
       iex> {:ok, game} = game |> Game.play("e2e4")
       iex> {:ok, game} = game |> Game.play("c7c5")
       iex> game.current_position.fen
       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-  
+
   """
-  @spec new(fen()) :: t() | error()
-  def new(), do: new(nil)
-  def new(fen) do 
+  @spec new(fen() | nil) :: t() | error()
+  def new(fen \\ nil) do
     case Position.new(fen) do
       %Position{} = position ->
         %Game{current_position: position}
-      {:error, reason} -> 
+      {:error, reason} ->
         {:error, reason}
     end
   end
-  
+
   @doc ~S"""
   Play a move. a move looks like "e2e4".
   """
@@ -73,7 +72,7 @@ defmodule ChessLogic.Game do
         } = game,
         move
       ) when status != :over do
-    with {:ok, new_current_pos} <- Position.play(current_pos, move), 
+    with {:ok, new_current_pos} <- Position.play(current_pos, move),
       {game_status, turn} <- Position.get_status(new_current_pos)
     do
       {status, winner, result} = case game_status do
@@ -91,7 +90,7 @@ defmodule ChessLogic.Game do
       end
       {
         :ok,
-        %{game| 
+        %{game|
           current_position: new_current_pos,
           history: [new_history_item(current_pos, move) | history],
           status: status,
@@ -114,7 +113,7 @@ defmodule ChessLogic.Game do
   def draw(%Game{status: status} = game) when status != :over do
     {
       :ok,
-      %{game| 
+      %{game|
         status: :over,
         result: @draw
       }
@@ -127,13 +126,13 @@ defmodule ChessLogic.Game do
   """
   @spec resign(t()) :: {:ok, t()} | error()
   def resign(%Game{current_position: current_pos, status: status} = game)
-    when status != :over 
+    when status != :over
   do
     {_, turn} = Position.get_status(current_pos)
     w = opponent_color(turn)
     {
       :ok,
-      %{game| 
+      %{game|
         status: :over,
         winner: w,
         result: winner_result(w)
@@ -150,7 +149,7 @@ defmodule ChessLogic.Game do
     {:ok, %{game | status: :over, winner: :white, result: result}}
   end
   def set_result(%Game{status: status} = game, "0-1" = result) when status != :over do
-    {:ok, %{game | status: :over, winner: :white, result: result}}
+    {:ok, %{game | status: :over, winner: :black, result: result}}
   end
   def set_result(%Game{status: status} = game, "1/2-1/2" = result) when status != :over do
     {:ok, %{game | status: :over, result: result}}
@@ -185,7 +184,7 @@ defmodule ChessLogic.Game do
   @doc ~S"""
   Import pgn into a game.
   """
-  @spec from_pgn(String.t()) :: t()
+  @spec from_pgn(String.t()) :: list(t())
   def from_pgn(pgn) do
     {:ok, tokens, _} = pgn
     |> String.trim("\uFEFF")
@@ -209,8 +208,12 @@ defmodule ChessLogic.Game do
 
         case Position.san_to_move(g.current_position, to_string(san)) do
           {:ok, m} ->
-            {:ok, g} = Game.play(g, m)
-            g
+            case Game.play(g, m) do
+              {:ok, g} -> g
+              {:error, reason} ->
+                IO.puts "Could not play game move #{reason} for #{inspect g}"
+                g
+            end
           {:error, reason} ->
             IO.puts "Could not process game tokens #{reason} for #{inspect g}"
             g
@@ -220,40 +223,40 @@ defmodule ChessLogic.Game do
 
     end)
   end
-    
+
   # PRIVATE
 
   defp new_history_item(%Position{fen: fen} = position, move) do
     {:ok, san} = ChessLogic.Position.move_to_san(position, move)
     %{fen: fen, move: move, san: san}
   end
-  
+
   defp opponent_color(:white), do: :black
   defp opponent_color(:black), do: :white
   defp opponent_color(_), do: nil
-  
+
   defp winner_result(:white), do: @white_win
   defp winner_result(:black), do: @black_win
   defp winner_result(_), do: nil
-  
+
   # Check if the position repeats 3x
   defp is_three_times_repetition(%Game{history: history}, %Position{fen: fen}) do
     short_fen = shorten_fen(fen)
-    
-    list = history 
-    |> Enum.map(fn %{fen: f} -> 
+
+    list = history
+    |> Enum.map(fn %{fen: f} ->
       shorten_fen(f)
     end)
     |> Enum.filter(fn el -> el == short_fen end)
-    
+
     (length list) >= 2
   end
-  
+
   # Drop the last 2 fields from fen: half_move and full_move
   defp shorten_fen(fen) do
     fen
     |> String.split()
-    |> Enum.take(4) 
+    |> Enum.take(4)
     |> Enum.join(" ")
   end
 end

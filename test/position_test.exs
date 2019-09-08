@@ -119,7 +119,7 @@ defmodule PositionTest do
     assert Position.move_to_san(p, "e1c1") == {:ok, "O-O-O"}
   end
   
-  # TODO - Check if ep is needed!
+  # Check if ep is needed!
   test "can translate en passant" do
     p = Position.new()
     assert {:ok, p} = Position.play(p, "e2e4")
