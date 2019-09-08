@@ -4,11 +4,11 @@
 
 % unwrap({_,_,V}) -> V.
 
--file("/Users/sqrt/.asdf/installs/erlang/20.1/lib/erlang/lib/parsetools-2.1.5/include/yeccpre.hrl", 0).
+-file("/Users/sqrt/.asdf/installs/erlang/22.0.7/lib/parsetools-2.1.8/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
-%% Copyright Ericsson AB 1996-2017. All Rights Reserved.
+%% Copyright Ericsson AB 1996-2018. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -63,8 +63,7 @@ return_error(Line, Message) ->
 yeccpars0(Tokens, Tzr, State, States, Vstack) ->
     try yeccpars1(Tokens, Tzr, State, States, Vstack)
     catch 
-        error: Error ->
-            Stacktrace = erlang:get_stacktrace(),
+        error: Error: Stacktrace ->
             try yecc_error_type(Error, Stacktrace) of
                 Desc ->
                     erlang:raise(error, {yecc_bug, ?CODE_VERSION, Desc},
@@ -177,7 +176,7 @@ yecctoken2string(Other) ->
 
 
 
--file("src/pgn_parser.erl", 180).
+-file("src/pgn_parser.erl", 179).
 
 -dialyzer({nowarn_function, yeccpars2/7}).
 yeccpars2(0=S, Cat, Ss, Stack, T, Ts, Tzr) ->

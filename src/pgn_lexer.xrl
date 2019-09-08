@@ -4,7 +4,8 @@
 
 Definitions.
 
-TAG            = \[[^\]]*\]
+% TAG            = \[[^\]]*\]
+TAG            = \[.*\".*\"\s?\]
 MOVE           = [1-9][0-9]*\.(\.)?(\.)?
 
 % There is an ambiguity on 26.Nxc8+- as the plus can be seen as check!
@@ -16,7 +17,7 @@ COMMENT_EOL    = ;.*
 MOVE_EVAL      = (!|!!|\?|\?\?|!\?|\?!)?
 
 NAG            = \$[0-9]*
-CASTLING       = O-O(-O)?
+CASTLING       = O-O(-O)?(\+)?
 RESULT         = 1-0|0-1|1\/2-1\/2|\*
 
 WHITESPACE     = [\s\t]

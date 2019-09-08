@@ -4,13 +4,16 @@ defmodule ChessLogic.MixProject do
   def project do
     [
       app: :chess_logic,
-      version: "0.2.2",
-      elixir: "~> 1.6",
+      version: "0.3.0",
+      elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       erlc_paths: ["src"],
+      # dialyzer: [
+      #   plt_add_deps: :transitive,
+      #   ignore_warnings: "dialyzer.ignore-warnings"
+      # ],
       dialyzer: [
-        plt_add_deps: :transitive,
-        ignore_warnings: "dialyzer.ignore-warnings"
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],
       description: description(),
       package: package(),
@@ -35,18 +38,18 @@ defmodule ChessLogic.MixProject do
       # {:chessfold, github: "fcardinaux/chessfold", app: false},
 
       # Development
-      {:dialyxir, "~> 1.0.0-rc.3", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.18.3", only: :dev, runtime: false},
-      {:credo, "~> 0.10.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.21.2", only: :dev, runtime: false},
+      {:credo, "~> 1.1", only: [:dev], runtime: false}
     ]
   end
-  
+
   defp description do
     """
     Elixir struct for playing the game of chess.
     """
   end
-  
+
   defp package do
     # These are the default files included in the package
     [
