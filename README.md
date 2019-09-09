@@ -5,7 +5,7 @@
 This package contains logic to play the game of chess. 
 Functional Chess validator written in Elixir. 
 
-It uses leex to parse pgn files, and chessfold to implement chess logic. Both in Erlang.
+It uses leex and yecc to parse pgn files.
 
 It understands following rules:
 
